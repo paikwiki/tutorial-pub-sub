@@ -10,12 +10,15 @@
 <body>
   <div class="sidebar">
     <h1>My fav places on earth v1.0</h1>
+    <div id="citiesList"></div>
     <!-- footer를 여기에 둔다 -->
   </div>
   <div class="main-content-area">
     <div id="map"></div>
   </div>
   <script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY"></script>
-  <script src="map.js"></script>
+  <script type="module" src="dataService.js"></script>
+  <script type="module" src="map.js"></script>
+  <script type="module" src="sidebar.js"></script>
 </body>
 </html>

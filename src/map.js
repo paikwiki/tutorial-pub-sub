@@ -1,6 +1,7 @@
 /* map.js */
 let googleMap;
-let myPlaces = [];
+
+import { addPlace, getPlaces, subscribe } from './dataService.js';
 
 function init() {
   googleMap = new google.maps.Map(document.getElementById('map'), {
@@ -9,32 +10,20 @@ function init() {
   });
 
   googleMap.markerList = [];
-  googleMap.addListener('click', addPlace);
-
-  const placesFromLocalstorage = JSON.parse(localStorage.getItem('myPlaces'));
-  // localStorage에 뭔가 있으면, 현재 장소 리스트로 설정한다.
-  if (Array.isArray(placesFromLocalstorage)) {
-    myPlaces = placesFromLocalstorage;
-    renderMarkers();
-  }
+  googleMap.addListener('click', addMarker);
 }
 
-function addPlace(event) {
-  myPlaces.push({
-    position: event.latLng,
-  });
-
-  // 마커가 추가되면 랜더링하면서 localStorage와 동기화한다
-  localStorage.setItem('myPlaces', JSON.stringify(myPlaces));
-  renderMarkers();
+function addMarker(event) {
+  addPlace(event.latLng);
+  renderMakers();
 }
 
-function renderMarkers() {
-  googleMap.markerList.forEach(m => m.setMap(null)); // 모든 마커를 제거
+function renderMakers() {
+  googleMap.markerList.forEach(m => m.setMap(null)); // 모든 마커 제거
   googleMap.markerList = [];
 
-  // myPlaces 배열의 요소를 기반으로 마커를 추가한다
-  myPlaces.forEach(place => {
+  // myPlaces 배열의 요소를 기반으로 마커를 추가합니다
+  getPlaces().forEach(place => {
     const marker = new google.maps.Marker({
       position: place.position,
       map: googleMap,
@@ -45,3 +34,6 @@ function renderMarkers() {
 }
 
 init();
+renderMakers();
+
+subscribe(renderMakers);
